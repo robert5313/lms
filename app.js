@@ -78,10 +78,10 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
 
-    const user = User.emailExists(email)
+    const user = User.findOne({ email })
     .then((user) => {
         if (user) {
-            res.send('User logged in successfully');
+            res.send(`${user.username} logged in successfully`);
         } else {
             res.status(400).send('Invalid credentials');
         }
