@@ -49,19 +49,30 @@ app.post('/register', (req, res) => {
         return res.status(400).send(`${email} is not a valid email address`);
     }
 
-    const newUser = new User({
-        username,
-        email,
-        password
-    });
+    // Check if username already exists
+    User.findOne({ username: username })
+        .then((existingUser) => {
+            if (existingUser) {
+                return res.status(400).send('Username already exists');
+            }
 
-    newUser.save()
-    .then(() => {
-        res.send(`User registered successfully ${newUser}`);
-    })
-    .catch((error) => {
-        res.status(400).send(`${email} - Email address already exists`);
-    });
+            const newUser = new User({
+                username,
+                email,
+                password
+            });
+
+            newUser.save()
+            .then(() => {
+                res.send(`User registered successfully ${newUser}`);
+            })
+            .catch((error) => {
+                res.status(400).send(`${email} - Email address already exists`);
+            });
+        })
+        .catch((error) => {
+            res.status(500).send('Error checking username availability');
+        });
 });
 
 app.post('/login', (req, res) => {

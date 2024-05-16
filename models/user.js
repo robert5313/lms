@@ -27,17 +27,5 @@ userSchema.pre('save', async function(next){
     next();
 });
 
-//confirm the email is a valid email
-userSchema.path('email').validate(async (email) => {
-    const emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    return emailRegex.test(email);
-}, 'Make sure you enter a correct email address');
-
-//confirm the username is alphanumeric
-userSchema.path('username').validate(async (username) => {
-    const usernameRegex = /^[a-zA-Z0-9]+$/;
-    return usernameRegex.test(username);
-}, 'Invalid username');
-
 
 module.exports = mongoose.model('User', userSchema);
